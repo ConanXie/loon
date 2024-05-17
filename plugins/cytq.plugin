@@ -5,7 +5,7 @@
 #!source=https://raw.githubusercontent.com/deezertidal/QuantumultX-Rewrite/master/rewrite/colorweather.conf
 
 [Script]
-http-response ^http[s]?:\/\/biz\.(caiyunapp|cyapi)\.(com|cn)\/v2\/user.*$ script-path=https://raw.githubusercontent.com/ly661/WeiRen0-Scripts/main/cytq.js
+http-response ^http[s]?:\/\/biz\.(caiyunapp|cyapi)\.(com|cn)\/v2\/user.*$ script-path=https://raw.githubusercontent.com/ly661/WeiRen0-Scripts/main/cytq.js, requires-body=1
 
 [URL Rewrite]
 ^https:\/\/ad\.caiyunapp\.com\/ reject
