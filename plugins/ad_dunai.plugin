@@ -1,5 +1,7 @@
 #!name=毒奶特供(2024年05月15日更新)
 #!desc=毒奶去网页广告计划（稳定版）For Surge / Quantumult X / Shadowrocket/ 油猴 - Tampermonkey ；如去内容农场/泥巴影视/剧迷网/低端影视/哔滴影视/Jable/Missav//Netflav/Xvideos/Pornhub/91../禁漫天堂/百度与谷歌搜索结果页面广告等视频网站广告或其他ACG网站网页广告/百度知道广告...
+#!icon=https://raw.githubusercontent.com/deezertidal/private/main/icons/adguard.png
+#!source=https://github.com/ddgksf2013/Rewrite/raw/master/AdBlock/StartUp.conf
 
 #! \\ You Can Change The World With Code.
 #!配置教程: https://limbopro.com/archives/12904.html
