@@ -1,0 +1,110 @@
+#!name = 哔哩哔哩广告净化（墨鱼版 · Loon 转换）
+#!desc = 基于墨鱼版 V2.0.138 转换，保留去广告、搜索净化及页面精简。JSON 脚本固定为指定提交，Protobuf 固定为 v0.6.19。需要开启复写、脚本和 HTTPS 解密。
+#!author = ddgksf2013, blackmatrix7, app2smile, yjqiang, kokoryh, Maasea, BiliUniverse
+#!homepage = https://github.com/ddgksf2013/Rewrite/blob/39feca9872e03e5c4062b6ec923cf46674d30ff7/AdBlock/BilibiliAds.conf
+#!date = 2026-11-02
+
+# 原作者及贡献者署名保留；本文件仅转换 Loon 配置语法，未修改远程脚本。
+# 原规则版本：V2.0.138，更新时间：2025-07-18。
+# 规则来源：https://github.com/ddgksf2013/Rewrite/blob/39feca9872e03e5c4062b6ec923cf46674d30ff7/AdBlock/BilibiliAds.conf
+# JSON 脚本来源：https://github.com/ddgksf2013/Scripts/blob/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js
+# Protobuf 来源：https://github.com/BiliUniverse/ADBlock/releases/tag/v0.6.19
+# 保留上游的标签页、我的页面精简及旧版画质相关处理。
+# 旧版画质处理原注释仅适用于国区粉色客户端 V7.65，不代表实际开通会员。
+# 原配置的虚拟版本标记地址不参与请求处理；重复的 Search/Default 规则合并为靠前的 reject-200。
+
+[Rewrite]
+# 屏蔽广告浮窗@ddgksf2013
+^https?:\/\/api\.bilibili\.com\/pgc\/activity\/deliver\/material\/receive reject-dict
+
+# Material_Ad@ddgksf2013
+^https?:\/\/api\.bilibili\.com\/x\/vip\/ads\/material\/report reject-dict
+
+# 小卡片广告@ddgksf2013
+^https://api.bilibili.com/pgc/season/player/cards reject-dict
+
+# 点击追番Card@ddgksf2013
+^https?:\/\/api\.bilibili\.com\/pgc\/season\/player\/ogv\/cards reject-dict
+
+# 应用开屏去广告@bm7
+^https://app.bilibili.com/x/v2/splash/show reject-dict
+
+# 漫画去广告@ddgksf2013
+^https?:\/\/manga\.bilibili\.com\/twirp\/comic\.v\d\.Comic\/(Flash|ListFlash|GetActivityTab) reject-dict
+
+# 填词@ddgksf2013
+^https?:\/\/app\.bilibili\.com\/x\/v\d\/search\/defaultwords reject-dict
+
+# 屏蔽DefaultWord@ddgksf2013
+^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.app\.interface\.v1\.Search\/Default reject-200
+
+[Script]
+
+# JSON 响应：使用字符串响应体。
+# 视频播放下方商品推广@ddgksf2013
+http-response ^https?:\/\/api\.bili(api|bili)\.(net|com)\/pgc\/season\/app\/related\/recommend\? script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=视频播放下方商品推广
+
+# 屏蔽直播间商品广告浮窗[还有一个域名]@ddgksf2013
+http-response ^https?:\/\/api\.live\.bilibili\.com\/xlive\/e-commerce-interface\/v\d\/ecommerce-user\/get_shopping_info\? script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=屏蔽直播间商品广告浮窗[还有一个域名]
+
+# 直播去广告@bm7
+http-response ^https?:\/\/api\.live\.bilibili\.com\/xlive\/app-room\/v1\/index\/getInfoByRoom script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=直播去广告
+
+# 应用开屏广告预加载@yjqiang
+http-response ^https:\/\/app\.bilibili\.com\/x\/v2\/splash\/list script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=应用开屏广告预加载
+
+# 1080P高码率+4K画质[番剧和影视除外]@ddgksf2013
+http-response ^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/myinfo\? script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=1080P高码率+4K画质[番剧和影视除外]
+
+# 屏蔽直播页顶部轮播图@ddgksf2013
+http-response ^https?:\/\/api\.live\.bilibili\.com\/xlive\/app-interface\/v2\/index\/feed script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=屏蔽直播页顶部轮播图
+
+# 推荐去广告@ddgksf2013
+http-response ^https?:\/\/app\.bilibili\.com\/x\/v2\/feed\/index script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=推荐去广告
+
+# 追番去广告@ddgksf2013
+http-response ^https?:\/\/api\.(bilibili|biliapi)\.(com|net)\/pgc\/page\/bangumi script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=追番去广告
+
+# 观影页面去广告@ddgksf2013
+http-response ^https?:\/\/api\.(bilibili|biliapi)\.(com|net)\/pgc\/page\/cinema\/tab\? script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=观影页面去广告
+
+# 标签页处理@ddgksf2013
+http-response ^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/tab script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=标签页处理
+
+# 我的页面处理@ddgksf2013
+http-response ^https?:\/\/app\.bilibili\.com\/x\/v2\/account\/mine script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=我的页面处理
+
+# 屏蔽首页右上活动@ddgksf2013
+http-response ^https?:\/\/app\.bilibili\.com\/x\/resource\/top\/activity script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=屏蔽首页右上活动
+
+# 热搜发现@ddgksf2013
+http-response ^https://app.bilibili.com/x/v2/search/square script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=热搜发现
+
+# Protobuf / gRPC 响应：必须启用二进制响应体。
+# 搜索去广告@BiliUniverse
+http-response ^https?:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.polymer\.app\.search\.v1\.Search\/SearchAll$ script-path=https://github.com/BiliUniverse/ADBlock/releases/download/v0.6.19/response.bundle.js, requires-body=true, binary-body-mode=true, timeout=60, tag=搜索去广告
+
+# 交互点赞投票弹幕及会员弹幕@BiliUniverse
+http-response ^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.community\.service\.dm\.v1\.DM\/(DmView|DmSegMobile) script-path=https://github.com/BiliUniverse/ADBlock/releases/download/v0.6.19/response.bundle.js, requires-body=true, binary-body-mode=true, timeout=60, tag=交互点赞投票弹幕及会员弹幕
+
+# 青少年弹窗@BiliUniverse
+http-response ^https:\/\/(grpc\.biliapi\.net|app\.bilibili\.com)\/bilibili\.app\.interface\.v1\.Teenagers\/ModeStatus script-path=https://github.com/BiliUniverse/ADBlock/releases/download/v0.6.19/response.bundle.js, requires-body=true, binary-body-mode=true, timeout=60, tag=青少年弹窗
+
+# UP主推荐广告[适配ipad端]@BiliUniverse
+http-response ^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.app\.(view|viewunite)\.v1\.View\/(View|TFInfo)$ script-path=https://github.com/BiliUniverse/ADBlock/releases/download/v0.6.19/response.bundle.js, requires-body=true, binary-body-mode=true, timeout=60, tag=UP主推荐广告[适配ipad端]
+
+# 动态综合页及视频页去广告@BiliUniverse
+http-response ^https?:\/\/(app\.bilibili\.com|grpc\.biliapi\.net)\/bilibili\.app\.dynamic\.v2\.Dynamic\/Dyn(All|Video)$ script-path=https://github.com/BiliUniverse/ADBlock/releases/download/v0.6.19/response.bundle.js, requires-body=true, binary-body-mode=true, timeout=60, tag=动态综合页及视频页去广告
+
+# 上游默认停用的可选规则，保持停用；移除规则行前的 # 才会生效。
+# 字幕规则需额外添加解密域名；指定版本 JSON 脚本没有字幕转换分支，不建议启用该项。
+# 繁体CC字幕转中文简体[自行启用hostname=aisubtitle.hdslb.com,i0.hdslb.com]@ddgksf2013
+# http-response ^https?:\/\/.*\.hdslb\.com\/bfs\/subtitle\/.+\.json script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=繁体CC字幕转中文简体[自行启用hostname=aisubtitle.hdslb.com,i0.hdslb.com]
+
+# 去除统一设置的皮肤[注释留存]@ddgksf2013
+# http-response ^https?:\/\/app\.bilibili\.com\/x\/resource\/show\/skin\? script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/dd607d8c27bb694ced7651853e25cbfd4a410244/bilibili_json.js, requires-body=true, timeout=10, tag=去除统一设置的皮肤[注释留存]
+
+[MitM]
+
+# 保留源配置中的域名及排除项；Loon 插件中无需添加 %APPEND%。
+hostname = -broadcast.chat.bilibili.com, -cm.bilibili.com, -*cdn*.biliapi.net, -*tracker*.biliapi.net, app.bilibili.com, api.live.bilibili.com, *.bilibili.com, *.bili*.*, *.bilibili.*, grpc.biliapi.net,*biliapi.net
